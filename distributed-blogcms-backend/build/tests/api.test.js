@@ -40,5 +40,4 @@ chai_1.default.use(chai_http_1.default);
         (0, chai_1.expect)(res).to.have.status(200);
         (0, chai_1.expect)(res.body).to.be.an('array');
     });
-    // Add more integration tests for other API endpoints
 });

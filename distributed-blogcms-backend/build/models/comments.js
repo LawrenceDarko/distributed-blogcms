@@ -28,7 +28,7 @@ exports.CommentModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const commentSchema = new mongoose_1.Schema({
     author: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User', required: true },
-    postId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'BlogPost', required: true }, // Assuming comments are associated with blog posts, adjust the type accordingly
+    postId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'BlogPost', required: true },
     content: { type: String, required: true },
     datePosted: { type: Date, default: Date.now }
 });

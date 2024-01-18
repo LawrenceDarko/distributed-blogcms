@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const multer_1 = __importDefault(require("multer"));
 const limits = {
-    fileSize: 4 * 1024 * 1024, // Limit file size to 1MB
+    fileSize: 4 * 1024 * 1024, // Limit file size to 4MB
 };
 const fileFilter = (req, file, cb) => {
     // Check if the uploaded file is an image

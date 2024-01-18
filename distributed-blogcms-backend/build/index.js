@@ -49,29 +49,3 @@ databaseInstance.connect(MONGO_URI)
     console.error('Failed to connect to MongoDB. Exiting application.');
     process.exit(1);
 });
-// Normal Connection
-// mongoose.connect(process.env.MONGO_URI, {
-//     // useNewUrlParser: true,
-//     // useUnifiedTopology: true
-// })
-// .then(() => {
-//     app.use(bodyParser.json());
-//     app.use(cookieParser())
-//     app.use(bodyParser.urlencoded({ extended: true }));
-//     app.use(cors({
-//         origin:'http://localhost:3000', 
-//         credentials:true,        
-//     }));
-//     app.use("/images",
-//     express.static(path.join(process.cwd(), 'uploads'))
-// )
-//     app.use('/users', userRoutes);
-//     app.use('/blogposts', blogPostRoutes);
-//     app.use('/auth', authRoutes);
-//     app.listen(PORT, () => {
-//         console.log(`Server is running on http://localhost:${PORT}`);
-//     });
-// })
-// .catch((error: any)=>{
-//     console.log('db connect error:',error.message)
-// })
