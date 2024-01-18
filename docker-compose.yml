@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  distributed-blogcms-frontend:
+    build:
+      context: ./distributed-blogcms-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    volumes:
+      - '/app/node_modules'
+      - ./distributed-blogcms-frontend:/app  # Mount the host directory to /app in the container
+    env_file:
+      - ./distributed-blogcms-frontend/.env.production
+
+  distributed-blogcms-backend:
+    build:
+      context: ./distributed-blogcms-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    volumes:
+      - '/app/node_modules'
+      - ./distributed-blogcms-backend:/app  # Mount the host directory to /app in the container
+    env_file:
+      - ./distributed-blogcms-backend/.env
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+    depends_on:
+      - distributed-blogcms-frontend
+      - distributed-blogcms-backend
+
+networks:
+  app-network:
+    driver: bridge
