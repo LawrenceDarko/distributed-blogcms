@@ -15,7 +15,7 @@ const SideNewsItem: React.FC<SideNewsItemProps> = ({ title, image, description, 
       <div className='w-full h-full mb-2 p-2 flex'>
         <div className='w-1/2 h-full'>
           <img
-            src="/images/jill.jpg" // Replace with the path to your news image
+            src="/images/jill.jpg"
             alt="News Image"
             className="w-full h-full object-cover"
           />

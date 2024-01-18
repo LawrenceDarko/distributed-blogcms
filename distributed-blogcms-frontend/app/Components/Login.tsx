@@ -19,7 +19,7 @@ const LoginComp = () => {
     const [errorMsg, setErrorMsg] = useState('')
 
     const handleLogin = async () => {
-        // Handle login logic here
+        // Handle login logic
         const loginData = {
             email,
             password,

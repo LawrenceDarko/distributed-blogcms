@@ -1,6 +1,4 @@
-Got it. I've updated the README file accordingly:
 
-```markdown
 # Distributed Blog CMS
 
 This repository contains the source code for a distributed Blog CMS developed using Node.js, Express.js, MongoDB, and related technologies.
@@ -20,7 +18,7 @@ Make sure you have [Docker](https://www.docker.com/) and [Docker Compose](https:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/distributed-blog-cms.git
+    git clone https://github.com/LawrenceDarko/distributed-blogcms.git
     ```
 
 2. Navigate to the project directory:
@@ -29,7 +27,7 @@ Make sure you have [Docker](https://www.docker.com/) and [Docker Compose](https:
     cd distributed-blog-cms
     ```
 
-3. Create a `.env` file in the root directory and configure your environment variables. You can use the provided `.env.example` as a template:
+3. Create a `.env` file in the root directory and configure your environment variables. You can use the provided `.env.example` as a template or you can leave it as it is because I have provided them with the project:
 
     ```bash
     cp .env.example .env

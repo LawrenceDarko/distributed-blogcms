@@ -16,5 +16,4 @@ describe('API Endpoints', () => {
         expect(res.body).to.be.an('array');
     });
 
-    // Add more integration tests for other API endpoints
 });

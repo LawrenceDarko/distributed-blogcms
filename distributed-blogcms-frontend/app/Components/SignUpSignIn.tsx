@@ -6,9 +6,6 @@ import { useGeneralContext } from "@/app/hooks/GeneralContext"
 import { useRouter } from "next/navigation"
 import { cookies } from "next/headers";
 
-// interface SignUpSignInProps {
-//     handleLogout: () => void;
-// }
 
 const SignUpSignIn: React.FC = () => {
     const router = useRouter();
