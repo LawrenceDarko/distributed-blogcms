@@ -32,9 +32,9 @@ const SignUpComp = () => {
       });
       const resData = response.data;
 
-      console.log(resData)
+      // console.log(resData)
 
-      if (resData.success) {
+      if (resData.status === 'success') {
         router.push('/auth/login');
       }
     } catch (error: any) {

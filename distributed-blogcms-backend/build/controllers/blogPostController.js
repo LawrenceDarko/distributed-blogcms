@@ -8,6 +8,8 @@ const blogPost_1 = require("../models/blogPost");
 const cache_1 = require("../cache/cache");
 // import { Cache } from '../cache/cache';
 const fs_1 = __importDefault(require("fs"));
+const ALL_BLOG_POSTS_CACHE_KEY = 'allBlogPosts';
+const AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX = 'authorBlogPosts_';
 const createBlogPost = async (req, res) => {
     try {
         let blogImage = null;
@@ -28,6 +30,7 @@ const createBlogPost = async (req, res) => {
             image: blogImage,
             datePosted,
         });
+        cache_1.cache.del(ALL_BLOG_POSTS_CACHE_KEY);
         res.status(201).json({ status: 'success', message: 'Blog post created successfully', data: { newBlogPost } });
     }
     catch (error) {
@@ -37,17 +40,15 @@ const createBlogPost = async (req, res) => {
 };
 exports.createBlogPost = createBlogPost;
 const getAllBlogPosts = async (req, res) => {
-    // const cache = new Cache();
     try {
-        const cachedData = await cache_1.cache.get('allBlogPosts');
-        // console.log("CACHED DATA:", cachedData)
+        const cachedData = await cache_1.cache.get(ALL_BLOG_POSTS_CACHE_KEY);
         // const cachedData = false;
         if (cachedData) {
             res.json({ status: 'success', message: 'Blog posts retrieved successfully from cache', data: JSON.parse(cachedData) });
         }
         else {
             const blogPosts = await blogPost_1.BlogPostModel.find().populate('author').select('-password').sort({ createdAt: -1 }).exec();
-            cache_1.cache.set('allBlogPosts', JSON.stringify(blogPosts));
+            await cache_1.cache.set(ALL_BLOG_POSTS_CACHE_KEY, JSON.stringify(blogPosts));
             res.json({ status: 'success', message: 'Blog posts retrieved successfully', data: blogPosts });
         }
     }
@@ -75,7 +76,7 @@ const getAllBlogPostsByAuthorId = async (req, res) => {
     const authorId = req.params.authorId;
     try {
         // const cachedData = false;
-        const cachedData = await cache_1.cache.get('authorBlogPosts');
+        const cachedData = await cache_1.cache.get(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${authorId}`);
         // console.log("CACHED DATA:", cachedData)
         if (cachedData) {
             res.json({ status: 'success', message: 'Author Blog posts retrieved successfully from cache', data: JSON.parse(cachedData) });
@@ -86,7 +87,7 @@ const getAllBlogPostsByAuthorId = async (req, res) => {
                 res.status(404).json({ status: 'error', message: 'Author has no blog post yet', data: null });
                 return;
             }
-            cache_1.cache.set('authorBlogPosts', JSON.stringify(blogPosts));
+            await cache_1.cache.set(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${authorId}`, JSON.stringify(blogPosts));
             res.json({ status: 'success', message: 'Blog posts retrieved successfully', data: blogPosts });
         }
     }
@@ -110,8 +111,10 @@ const updateBlogPost = async (req, res) => {
             }
         }
         const updatedBlogPost = await blogPost_1.BlogPostModel.findOneAndUpdate({ slug: req.params.slug }, updatedData, { new: true });
-        cache_1.cache.del('allBlogPosts');
-        cache_1.cache.del('authorBlogPosts');
+        await Promise.all([
+            cache_1.cache.del(ALL_BLOG_POSTS_CACHE_KEY),
+            cache_1.cache.del(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${updatedBlogPost?.author}`),
+        ]);
         if (!updatedBlogPost) {
             return res.status(404).json({ status: 'error', message: 'Blog Post not found', data: null });
         }
@@ -129,6 +132,10 @@ const deleteBlogPost = async (req, res) => {
         if (!deletedBlogPost) {
             return res.status(404).json({ status: 'error', message: 'Blog Post not found', data: null });
         }
+        await Promise.all([
+            cache_1.cache.del(ALL_BLOG_POSTS_CACHE_KEY),
+            cache_1.cache.del(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${deletedBlogPost.author}`),
+        ]);
         res.json({ status: 'success', message: 'Blog post deleted successfully', data: deletedBlogPost });
     }
     catch (error) {

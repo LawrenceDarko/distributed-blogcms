@@ -5,6 +5,9 @@ import { cache } from '../cache/cache';
 // import { Cache } from '../cache/cache';
 import fs from 'fs';
 
+const ALL_BLOG_POSTS_CACHE_KEY = 'allBlogPosts';
+const AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX = 'authorBlogPosts_';
+
 export const createBlogPost = async (req: Request, res: Response) => {
     
     try {
@@ -28,6 +31,8 @@ export const createBlogPost = async (req: Request, res: Response) => {
             image: blogImage,
             datePosted,
         });
+
+        cache.del(ALL_BLOG_POSTS_CACHE_KEY);
         res.status(201).json({ status: 'success', message: 'Blog post created successfully', data: { newBlogPost } });
     } catch (error) {
         console.error(error);
@@ -36,17 +41,16 @@ export const createBlogPost = async (req: Request, res: Response) => {
 };
 
 export const getAllBlogPosts = async (req: Request, res: Response): Promise<void> => {
-    // const cache = new Cache();
+
     try {
-        const cachedData = await cache.get('allBlogPosts');
-        // console.log("CACHED DATA:", cachedData)
+        const cachedData = await cache.get(ALL_BLOG_POSTS_CACHE_KEY);
         // const cachedData = false;
 
         if (cachedData) {
             res.json({ status: 'success', message: 'Blog posts retrieved successfully from cache', data: JSON.parse(cachedData) });
         } else {
             const blogPosts = await BlogPostModel.find().populate('author').select('-password').sort({ createdAt: -1 }).exec();
-            cache.set('allBlogPosts', JSON.stringify(blogPosts));
+            await cache.set(ALL_BLOG_POSTS_CACHE_KEY, JSON.stringify(blogPosts));
             res.json({ status: 'success', message: 'Blog posts retrieved successfully', data: blogPosts });
         }
     } catch (error) {
@@ -74,7 +78,7 @@ export const getAllBlogPostsByAuthorId = async (req: Request, res: Response): Pr
 
     try {
         // const cachedData = false;
-        const cachedData = await cache.get('authorBlogPosts');
+        const cachedData = await cache.get(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${authorId}`);
         // console.log("CACHED DATA:", cachedData)
 
         if (cachedData) {
@@ -86,7 +90,8 @@ export const getAllBlogPostsByAuthorId = async (req: Request, res: Response): Pr
                 res.status(404).json({ status: 'error', message: 'Author has no blog post yet', data: null });
                 return;
             }
-            cache.set('authorBlogPosts', JSON.stringify(blogPosts));
+
+            await cache.set(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${authorId}`, JSON.stringify(blogPosts));
             res.json({ status: 'success', message: 'Blog posts retrieved successfully', data: blogPosts });
         }
     } catch (error) {
@@ -117,8 +122,10 @@ export const updateBlogPost = async (req: Request, res: Response) => {
             { new: true }
         );
 
-        cache.del('allBlogPosts');
-        cache.del('authorBlogPosts');
+        await Promise.all([
+            cache.del(ALL_BLOG_POSTS_CACHE_KEY),
+            cache.del(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${updatedBlogPost?.author}`),
+        ]);
 
         if (!updatedBlogPost) {
             return res.status(404).json({ status: 'error', message: 'Blog Post not found', data: null });
@@ -137,6 +144,11 @@ export const deleteBlogPost = async (req: Request, res: Response) => {
         if (!deletedBlogPost) {
             return res.status(404).json({ status: 'error', message: 'Blog Post not found', data: null });
         }
+        
+        await Promise.all([
+            cache.del(ALL_BLOG_POSTS_CACHE_KEY),
+            cache.del(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${deletedBlogPost.author}`),
+        ]);
         res.json({ status: 'success', message: 'Blog post deleted successfully', data: deletedBlogPost });
     } catch (error) {
         console.error(error);

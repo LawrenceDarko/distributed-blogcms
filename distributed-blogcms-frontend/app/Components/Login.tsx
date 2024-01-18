@@ -44,9 +44,7 @@ const LoginComp = () => {
                 localStorage.setItem('user', JSON.stringify(resData.data));
                 setAuth(resData.data);
                 setErrorMsg('');
-                // router.push('/wall');
-                router.replace('/wall')
-                // window.location.reload();
+                router.push('/wall');
                 
             }
         } catch (error: any) {

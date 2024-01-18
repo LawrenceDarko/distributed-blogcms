@@ -41,7 +41,7 @@ const homeRoutes = [
 ]
 
 export const Navbar = () => {
-    const apiEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`;
+    const apiEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`;
     const router = useRouter();
     const { auth, setAuth } = useGeneralContext();
     // console.log(auth)
