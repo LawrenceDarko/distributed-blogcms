@@ -22,15 +22,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -38,17 +29,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // src/tests/userController.test.ts
 const chai_1 = __importStar(require("chai"));
 const chai_http_1 = __importDefault(require("chai-http"));
-// import app from '../index';
 const node_test_1 = require("node:test");
 const __1 = require("..");
 chai_1.default.use(chai_http_1.default);
 (0, node_test_1.describe)('User Controller', () => {
-    (0, node_test_1.it)('should create a new user', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield chai_1.default.request(__1.app)
+    (0, node_test_1.it)('should create a new user', async () => {
+        const res = await chai_1.default.request(__1.app)
             .post('/users/create')
             .send({ username: 'testuser', email: 'test@example.com', password: 'testpassword' });
         (0, chai_1.expect)(res).to.have.status(201);
         (0, chai_1.expect)(res.body).to.have.property('message').to.equal('User created successfully');
-    }));
-    // Add more unit tests for other controller methods
+    });
 });

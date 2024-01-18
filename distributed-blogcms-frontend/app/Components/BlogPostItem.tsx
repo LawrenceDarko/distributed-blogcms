@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface BlogPostItemProps {
   title: string;
@@ -40,13 +41,18 @@ const BlogPostItem: React.FC<BlogPostItemProps> = ({ title, summary, image, auth
   return (
     <div className="flex p-4 mb-4 bg-white rounded-md shadow-md">
       {/* Image (if available) */}
+
       {image && (
-        <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${image}`} alt="Blog Image" className="object-cover w-1/4 h-32 mb-4 mr-4 rounded-md" />
+        
+        <div className='w-1/4 h-32 mb-4 mr-4 rounded-md'>
+            <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${image}`} alt="Blog Image" className="object-cover h-full w-ful" />
+        </div>
+        
       )}
 
       <div className="flex-1">
         {/* Blog Title */}
-        <h2 className="mb-2 text-lg font-bold">{title}</h2>
+        <Link href={`feed/details/${slug}`} className="mb-2 text-lg font-bold hover:underline hover:text-red-500">{title}</Link>
 
         {/* Summary Content */}
         <p className="mb-4 text-gray-700">{summary.substring(0, 100)}...</p>

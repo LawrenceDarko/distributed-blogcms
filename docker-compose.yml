@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+      
   distributed-blogcms-frontend:
     build:
       context: ./distributed-blogcms-frontend
@@ -26,8 +33,11 @@ services:
       - ./distributed-blogcms-backend:/app  # Mount the host directory to /app in the container
     env_file:
       - ./distributed-blogcms-backend/.env
+    depends_on:
+      - redis 
 
   nginx:
+    restart: always
     image: nginx:latest
     ports:
       - "80:80"

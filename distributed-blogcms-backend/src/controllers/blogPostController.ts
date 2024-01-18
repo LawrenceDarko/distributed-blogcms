@@ -75,9 +75,10 @@ export const getAllBlogPostsByAuthorId = async (req: Request, res: Response): Pr
     try {
         // const cachedData = false;
         const cachedData = await cache.get('authorBlogPosts');
+        // console.log("CACHED DATA:", cachedData)
 
         if (cachedData) {
-            res.json({ status: 'success', message: 'Blog posts retrieved successfully from cache', data: JSON.parse(cachedData) });
+            res.json({ status: 'success', message: 'Author Blog posts retrieved successfully from cache', data: JSON.parse(cachedData) });
         } else {
             const blogPosts = await BlogPostModel.find({ author: authorId }).populate('author').sort({ createdAt: -1 }).exec();
 
@@ -115,6 +116,9 @@ export const updateBlogPost = async (req: Request, res: Response) => {
             updatedData,
             { new: true }
         );
+
+        cache.del('allBlogPosts');
+        cache.del('authorBlogPosts');
 
         if (!updatedBlogPost) {
             return res.status(404).json({ status: 'error', message: 'Blog Post not found', data: null });

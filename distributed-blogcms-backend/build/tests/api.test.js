@@ -22,15 +22,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -43,11 +34,11 @@ const node_test_1 = require("node:test");
 // import app from '../index';
 chai_1.default.use(chai_http_1.default);
 (0, node_test_1.describe)('API Endpoints', () => {
-    (0, node_test_1.it)('should retrieve all blog posts', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield chai_1.default.request(__1.app)
+    (0, node_test_1.it)('should retrieve all blog posts', async () => {
+        const res = await chai_1.default.request(__1.app)
             .get('/blogposts');
         (0, chai_1.expect)(res).to.have.status(200);
         (0, chai_1.expect)(res.body).to.be.an('array');
-    }));
+    });
     // Add more integration tests for other API endpoints
 });

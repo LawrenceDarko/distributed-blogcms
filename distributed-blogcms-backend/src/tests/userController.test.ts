@@ -1,7 +1,6 @@
 // src/tests/userController.test.ts
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-// import app from '../index';
 import { describe, it } from 'node:test';
 import { app } from '..';
 
@@ -17,5 +16,4 @@ describe('User Controller', () => {
         expect(res.body).to.have.property('message').to.equal('User created successfully');
     });
 
-    // Add more unit tests for other controller methods
 });
