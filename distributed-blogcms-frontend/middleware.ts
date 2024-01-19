@@ -39,10 +39,10 @@ export async function middleware(request: NextRequest) {
         }
 
         // if user is logged in and still wan to access login page redirect back
-        if (user?.exp > Date.now()/1000 && pathname === '/auth/login') {
-            url.pathname = "/";
-            return NextResponse.redirect(url);
-        }
+        // if (user?.exp > Date.now()/1000 && pathname === '/auth/login') {
+        //     url.pathname = "/";
+        //     return NextResponse.redirect(url);
+        // }
 
     }
 
