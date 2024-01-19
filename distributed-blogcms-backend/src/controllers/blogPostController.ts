@@ -32,7 +32,10 @@ export const createBlogPost = async (req: Request, res: Response) => {
             datePosted,
         });
 
-        cache.del(ALL_BLOG_POSTS_CACHE_KEY);
+        await Promise.all([
+            cache.del(ALL_BLOG_POSTS_CACHE_KEY),
+            cache.del(`${AUTHOR_BLOG_POSTS_CACHE_KEY_PREFIX}${newBlogPost?.author}`),
+        ]);
         res.status(201).json({ status: 'success', message: 'Blog post created successfully', data: { newBlogPost } });
     } catch (error) {
         console.error(error);
